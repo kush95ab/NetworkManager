@@ -340,6 +340,10 @@ get_wired_info (NMDevice *nm_device)
         NMIP4Config *ip4_config = NULL;
         gchar *str_tmp;
 
+        /* device MAC */
+        str = nm_device_ethernet_get_hw_address (NM_DEVICE_ETHERNET (nm_device));
+        g_print("Hardware Address: %s\n", str);
+
         state = nm_device_get_state (nm_device);
         device_visible = (state != NM_DEVICE_STATE_UNAVAILABLE && state != NM_DEVICE_STATE_UNMANAGED);
         if (!device_visible) {
@@ -364,10 +368,6 @@ get_wired_info (NMDevice *nm_device)
         status_reason = device_state_reason_to_localized_string (nm_device);
         if (status_reason)
                 g_print("status_reason = %s\n", status_reason);
-
-        /* device MAC */
-        str = nm_device_ethernet_get_hw_address (NM_DEVICE_ETHERNET (nm_device));
-        g_print("Hardware Address: %s\n", str);
 
         /* get IPv4 parameters */
         ip4_config = nm_device_get_ip4_config (nm_device);

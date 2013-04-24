@@ -377,7 +377,10 @@ get_wifi_info (NMDevice *nm_device)
         guint speed = 0;
         NMAccessPoint *active_ap;
         NMDeviceState state;
+        const GByteArray *ssid;
         NMIP4Config *ip4_config = NULL;
+        const gchar *ssid_text;
+        gchar *title;
 
         active_ap = nm_device_wifi_get_active_access_point (NM_DEVICE_WIFI (nm_device));
 
@@ -399,6 +402,15 @@ get_wifi_info (NMDevice *nm_device)
         if (!active_ap) {
                 return;
         }
+
+        ssid = nm_access_point_get_ssid (active_ap);
+        if (ssid == NULL) {
+                g_print("ssid is NULL");
+        }
+        ssid_text = nm_utils_escape_ssid (ssid->data, ssid->len);
+        title = g_markup_escape_text (ssid_text, -1);
+        g_print("SSID: %s\n", title);
+        g_free (title);
 
         /* set device state, with status and optionally speed */
         if (state != NM_DEVICE_STATE_UNAVAILABLE)
